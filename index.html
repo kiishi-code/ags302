@@ -1,550 +1,328 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AGS 302 - Ruminant Animal Production (60 Questions)</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background: #f4f7f9;
-        padding: 15px;
-      }
-      .container {
-        max-width: 980px;
-        margin: auto;
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      }
-      h1 {
-        text-align: center;
-        color: #006400;
-      }
-      #timer {
-        font-size: 32px;
-        font-weight: bold;
-        text-align: center;
-        color: #d32f2f;
-        margin: 20px 0;
-      }
-      .section-title {
-        color: #006400;
-        margin: 35px 0 15px 0;
-      }
-      .question {
-        margin: 22px 0;
-        padding: 18px;
-        background: #f9f9f9;
-        border-radius: 8px;
-      }
-      .options label {
-        display: block;
-        margin: 10px 0;
-        font-size: 16px;
-      }
-      input[type="text"] {
-        padding: 10px;
-        width: 85%;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-      button {
-        padding: 14px 35px;
-        font-size: 18px;
-        background: #006400;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-      }
-      button:hover {
-        background: #004d00;
-      }
-      #result {
-        margin-top: 30px;
-        padding: 25px;
-        background: #e8f5e9;
-        border-radius: 8px;
-        display: none;
-        font-size: 18px;
-        line-height: 1.6;
-      }
-      .warning {
-        color: #d32f2f;
-        text-align: center;
-        font-weight: bold;
-        margin: 15px 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGS 302 Test (60 Questions)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7f9;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 100%;
+      margin: auto;
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #006400;
+      font-size: 1.5em;
+      margin: 10px 0 5px 0;
+    }
+    
+    /* Floating Timer */
+    #floating-timer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #d32f2f;
+      color: white;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 12px 10px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    #time {
+      font-size: 26px;
+    }
+
+    .content {
+      margin-top: 70px;   /* Space for floating timer */
+      padding: 15px;
+    }
+
+    .warning {
+      color: #d32f2f;
+      text-align: center;
+      font-weight: bold;
+      margin: 10px 0;
+      font-size: 0.95em;
+    }
+    .matric-box {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .matric-box input {
+      padding: 12px;
+      width: 90%;
+      max-width: 320px;
+      font-size: 16px;
+      text-align: center;
+      border: 2px solid #006400;
+      border-radius: 6px;
+    }
+    .section-title {
+      color: #006400;
+      margin: 25px 0 12px 0;
+      font-size: 1.2em;
+    }
+    .question {
+      margin: 18px 0;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    .options label {
+      display: block;
+      margin: 12px 0;
+      padding-left: 5px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 16px;
+      font-size: 18px;
+      background: #006400;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin: 30px 0 15px 0;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #004d00;
+    }
+    #result {
+      margin-top: 25px;
+      padding: 20px;
+      background: #e8f5e9;
+      border-radius: 10px;
+      display: none;
+      font-size: 17px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Timer -->
+  <div id="floating-timer">
+    Time Left: <span id="time">15:00</span>
+  </div>
+
+  <div class="container">
+    <div class="content">
       <h1>AGS 302 - Ruminant Animal Production</h1>
-      <p style="text-align: center; font-size: 19px">
-        <strong>Time Allowed: 15 Minutes</strong> | Total Questions: 60
-      </p>
+      <p style="text-align:center; font-size:17px;"><strong>15 Minutes</strong> | 60 Questions</p>
       <div class="warning">⚠️ Fast-paced test – Answer quickly!</div>
 
-      <div style="text-align: center; margin: 25px 0">
-        <label for="matric"><strong>Matriculation Number:</strong></label
-        ><br /><br />
-        <input
-          type="text"
-          id="matric"
-          placeholder="e.g. 2022/12345"
-          required
-          style="
-            padding: 12px;
-            width: 340px;
-            font-size: 17px;
-            text-align: center;
-            border: 2px solid #006400;
-          "
-        />
+      <div class="matric-box">
+        <label for="matric"><strong>Matriculation Number</strong></label>
+        <input type="text" id="matric" placeholder="e.g. 2022/12345" required>
       </div>
-
-      <div id="timer">Time Left: <span id="time">15:00</span></div>
 
       <div id="quiz"></div>
 
-      <div style="text-align: center; margin: 40px 0">
-        <button onclick="submitTest()" id="submitBtn">Submit Test</button>
-      </div>
+      <button onclick="submitTest()" id="submitBtn">Submit Test</button>
 
       <div id="result"></div>
     </div>
+  </div>
 
-    <script>
-      const totalTime = 15 * 60;
-      let timeLeft = totalTime;
-      let timerInterval;
-      let hasSubmitted = false;
+  <script>
+    const totalTime = 15 * 60;   // 15 minutes
+    let timeLeft = totalTime;
+    let timerInterval;
+    let hasSubmitted = false;
 
-      const questions = [
-        // Section A: MCQ 1-30
-        {
-          type: "mcq",
-          q: "The unique ability of ruminants to digest fibrous feeds is due to:",
-          options: [
-            "Enzymatic digestion",
-            "Microbial fermentation in the rumen",
-            "High saliva production",
-            "Fast metabolism",
-          ],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "The largest compartment of the ruminant stomach is the:",
-          options: ["Reticulum", "Omasum", "Rumen", "Abomasum"],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "Which of the following is a large ruminant?",
-          options: ["Goat", "Sheep", "Cattle", "Rabbit"],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "The White Fulani cattle is best described as:",
-          options: [
-            "Dairy breed",
-            "Beef breed",
-            "Dual-purpose breed",
-            "Draught-only breed",
-          ],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "Trypanotolerance is a key feature of:",
-          options: ["Red Bororo", "Sokoto Gudali", "Muturu", "White Fulani"],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "The gestation period of cattle is approximately:",
-          options: ["150 days", "283 days", "120 days", "365 days"],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "The oestrous cycle of sheep averages:",
-          options: ["21 days", "17 days", "28 days", "14 days"],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "Which sheep breed has a black front and white rear?",
-          options: ["Yankasa", "Uda", "Balami", "WAD"],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "The most economically important goat breed in Nigeria is:",
-          options: ["Sahel", "WAD", "Red Sokoto", "Boer"],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "Roughages are characterized by:",
-          options: [
-            "High protein content",
-            "Low fibre content",
-            "High fibre content",
-            "High fat content",
-          ],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "Which of the following is a protein concentrate?",
-          options: ["Maize", "Cassava peels", "Groundnut cake", "Molasses"],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "Silage is best described as:",
-          options: [
-            "Dry feed",
-            "Fermented forage",
-            "Concentrate feed",
-            "Mineral supplement",
-          ],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "The most common feeding system in Nigeria is:",
-          options: ["Intensive", "Semi-intensive", "Extensive", "Zero grazing"],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "Which feeding system involves partial grazing and supplementation?",
-          options: ["Extensive", "Intensive", "Semi-intensive", "Zero grazing"],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "Energy in ruminant nutrition is mainly derived from:",
-          options: ["Vitamins", "Minerals", "Carbohydrates", "Water"],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "Which nutrient is most important for all physiological processes?",
-          options: ["Protein", "Water", "Fat", "Fibre"],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "The primary reproductive organ in males is the:",
-          options: ["Epididymis", "Vas deferens", "Testes", "Penis"],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "Fertilization occurs in the:",
-          options: ["Uterus", "Cervix", "Oviduct", "Vagina"],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "The stage of oestrous when the female accepts mating is:",
-          options: ["Proestrus", "Oestrus", "Metestrus", "Dioestrus"],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "Artificial insemination helps in:",
-          options: [
-            "Disease spread",
-            "Genetic improvement",
-            "Reduced fertility",
-            "Poor management",
-          ],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "Flushing is done:",
-          options: [
-            "During lactation",
-            "Before mating",
-            "After weaning",
-            "During dry season",
-          ],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "Steaming up is practiced during:",
-          options: [
-            "Early pregnancy",
-            "Late pregnancy",
-            "After parturition",
-            "Weaning",
-          ],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "Colostrum is important because it contains:",
-          options: ["Fibre", "Hormones", "Antibodies", "Enzymes"],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "Weaning in small ruminants typically occurs at:",
-          options: ["1–2 weeks", "2–4 months", "6–9 months", "12 months"],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "Machine milking uses:",
-          options: ["Heat", "Pressure", "Vacuum", "Gravity"],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "Nono is an example of:",
-          options: [
-            "Fresh milk",
-            "Processed cheese",
-            "Fermented milk",
-            "Powdered milk",
-          ],
-          answer: 2,
-        },
-        {
-          type: "mcq",
-          q: "Pasteurization involves:",
-          options: [
-            "Cooling milk",
-            "Heating milk",
-            "Freezing milk",
-            "Drying milk",
-          ],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "Ear tagging is mainly used for:",
-          options: ["Feeding", "Identification", "Breeding", "Treatment"],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "Castration involves removal of:",
-          options: ["Ovaries", "Testes", "Udder", "Scrotum"],
-          answer: 1,
-        },
-        {
-          type: "mcq",
-          q: "Flushing improves:",
-          options: [
-            "Milk yield only",
-            "Ovulation rate",
-            "Water intake",
-            "Feed intake",
-          ],
-          answer: 1,
-        },
+    const questions = [
+      // Section A: MCQ (30)
+      { type: "mcq", q: "The unique ability of ruminants to digest fibrous feeds is due to:", options: ["Enzymatic digestion", "Microbial fermentation in the rumen", "High saliva production", "Fast metabolism"], answer: 1 },
+      { type: "mcq", q: "The largest compartment of the ruminant stomach is the:", options: ["Reticulum", "Omasum", "Rumen", "Abomasum"], answer: 2 },
+      { type: "mcq", q: "Which of the following is a large ruminant?", options: ["Goat", "Sheep", "Cattle", "Rabbit"], answer: 2 },
+      { type: "mcq", q: "The White Fulani cattle is best described as:", options: ["Dairy breed", "Beef breed", "Dual-purpose breed", "Draught-only breed"], answer: 2 },
+      { type: "mcq", q: "Trypanotolerance is a key feature of:", options: ["Red Bororo", "Sokoto Gudali", "Muturu", "White Fulani"], answer: 2 },
+      { type: "mcq", q: "The gestation period of cattle is approximately:", options: ["150 days", "283 days", "120 days", "365 days"], answer: 1 },
+      { type: "mcq", q: "The oestrous cycle of sheep averages:", options: ["21 days", "17 days", "28 days", "14 days"], answer: 1 },
+      { type: "mcq", q: "Which sheep breed has a black front and white rear?", options: ["Yankasa", "Uda", "Balami", "WAD"], answer: 1 },
+      { type: "mcq", q: "The most economically important goat breed in Nigeria is:", options: ["Sahel", "WAD", "Red Sokoto", "Boer"], answer: 2 },
+      { type: "mcq", q: "Roughages are characterized by:", options: ["High protein content", "Low fibre content", "High fibre content", "High fat content"], answer: 2 },
+      { type: "mcq", q: "Which of the following is a protein concentrate?", options: ["Maize", "Cassava peels", "Groundnut cake", "Molasses"], answer: 2 },
+      { type: "mcq", q: "Silage is best described as:", options: ["Dry feed", "Fermented forage", "Concentrate feed", "Mineral supplement"], answer: 1 },
+      { type: "mcq", q: "The most common feeding system in Nigeria is:", options: ["Intensive", "Semi-intensive", "Extensive", "Zero grazing"], answer: 2 },
+      { type: "mcq", q: "Which feeding system involves partial grazing and supplementation?", options: ["Extensive", "Intensive", "Semi-intensive", "Zero grazing"], answer: 2 },
+      { type: "mcq", q: "Energy in ruminant nutrition is mainly derived from:", options: ["Vitamins", "Minerals", "Carbohydrates", "Water"], answer: 2 },
+      { type: "mcq", q: "Which nutrient is most important for all physiological processes?", options: ["Protein", "Water", "Fat", "Fibre"], answer: 1 },
+      { type: "mcq", q: "The primary reproductive organ in males is the:", options: ["Epididymis", "Vas deferens", "Testes", "Penis"], answer: 2 },
+      { type: "mcq", q: "Fertilization occurs in the:", options: ["Uterus", "Cervix", "Oviduct", "Vagina"], answer: 2 },
+      { type: "mcq", q: "The stage of oestrous when the female accepts mating is:", options: ["Proestrus", "Oestrus", "Metestrus", "Dioestrus"], answer: 1 },
+      { type: "mcq", q: "Artificial insemination helps in:", options: ["Disease spread", "Genetic improvement", "Reduced fertility", "Poor management"], answer: 1 },
+      { type: "mcq", q: "Flushing is done:", options: ["During lactation", "Before mating", "After weaning", "During dry season"], answer: 1 },
+      { type: "mcq", q: "Steaming up is practiced during:", options: ["Early pregnancy", "Late pregnancy", "After parturition", "Weaning"], answer: 1 },
+      { type: "mcq", q: "Colostrum is important because it contains:", options: ["Fibre", "Hormones", "Antibodies", "Enzymes"], answer: 2 },
+      { type: "mcq", q: "Weaning in small ruminants typically occurs at:", options: ["1–2 weeks", "2–4 months", "6–9 months", "12 months"], answer: 1 },
+      { type: "mcq", q: "Machine milking uses:", options: ["Heat", "Pressure", "Vacuum", "Gravity"], answer: 2 },
+      { type: "mcq", q: "Nono is an example of:", options: ["Fresh milk", "Processed cheese", "Fermented milk", "Powdered milk"], answer: 2 },
+      { type: "mcq", q: "Pasteurization involves:", options: ["Cooling milk", "Heating milk", "Freezing milk", "Drying milk"], answer: 1 },
+      { type: "mcq", q: "Ear tagging is mainly used for:", options: ["Feeding", "Identification", "Breeding", "Treatment"], answer: 1 },
+      { type: "mcq", q: "Castration involves removal of:", options: ["Ovaries", "Testes", "Udder", "Scrotum"], answer: 1 },
+      { type: "mcq", q: "Flushing improves:", options: ["Milk yield only", "Ovulation rate", "Water intake", "Feed intake"], answer: 1 },
 
-        // Section B: Fill-in-the-Gap 31-60
-        { type: "fill", q: "Ruminants have a ______ stomach system." },
-        {
-          type: "fill",
-          q: "The four compartments include rumen, reticulum, omasum and ______.",
-        },
-        {
-          type: "fill",
-          q: "Microbial fermentation occurs mainly in the ______.",
-        },
-        {
-          type: "fill",
-          q: "Sheep and goats are classified as ______ ruminants.",
-        },
-        { type: "fill", q: "The White Fulani cattle is also called ______." },
-        { type: "fill", q: "The Muturu breed is resistant to ______ disease." },
-        {
-          type: "fill",
-          q: "The gestation period of sheep is about ______ days.",
-        },
-        {
-          type: "fill",
-          q: "The Yankasa sheep is mainly found in the ______ zone.",
-        },
-        {
-          type: "fill",
-          q: "The Red Sokoto goat is also known as ______ goat.",
-        },
-        { type: "fill", q: "Roughages contain more than ______% crude fibre." },
-        { type: "fill", q: "Maize is an example of ______ concentrate." },
-        { type: "fill", q: "Silage is produced through ______ process." },
-        { type: "fill", q: "The most common feeding system is ______ system." },
-        { type: "fill", q: "Zero grazing involves ______ confinement." },
-        { type: "fill", q: "Protein is needed for ______ and tissue repair." },
-        { type: "fill", q: "Water is the most ______ nutrient." },
-        { type: "fill", q: "The hormone responsible for libido is ______." },
-        { type: "fill", q: "Fertilization occurs in the ______ tube." },
-        { type: "fill", q: "The heat period is called ______." },
-        {
-          type: "fill",
-          q: "Artificial insemination requires technical ______.",
-        },
-        { type: "fill", q: "Flushing is done ______ weeks before mating." },
-        {
-          type: "fill",
-          q: "Steaming up occurs in the last ______ weeks of pregnancy.",
-        },
-        {
-          type: "fill",
-          q: "Colostrum should be given within ______ hours after birth.",
-        },
-        {
-          type: "fill",
-          q: "Weaning involves transition from milk to ______ feed.",
-        },
-        {
-          type: "fill",
-          q: "The hormone responsible for milk let-down is ______.",
-        },
-        {
-          type: "fill",
-          q: "Hand milking is the most ______ method in Nigeria.",
-        },
-        { type: "fill", q: "Nono is a ______ milk product." },
-        { type: "fill", q: "Pasteurization kills harmful ______." },
-        { type: "fill", q: "Branding creates ______ tissue on the skin." },
-        { type: "fill", q: "Castration leads to loss of ______ function." },
-      ];
+      // Section B: Fill-in-the-Gap (30)
+      { type: "fill", q: "Ruminants have a ______ stomach system." },
+      { type: "fill", q: "The four compartments include rumen, reticulum, omasum and ______." },
+      { type: "fill", q: "Microbial fermentation occurs mainly in the ______." },
+      { type: "fill", q: "Sheep and goats are classified as ______ ruminants." },
+      { type: "fill", q: "The White Fulani cattle is also called ______." },
+      { type: "fill", q: "The Muturu breed is resistant to ______ disease." },
+      { type: "fill", q: "The gestation period of sheep is about ______ days." },
+      { type: "fill", q: "The Yankasa sheep is mainly found in the ______ zone." },
+      { type: "fill", q: "The Red Sokoto goat is also known as ______ goat." },
+      { type: "fill", q: "Roughages contain more than ______% crude fibre." },
+      { type: "fill", q: "Maize is an example of ______ concentrate." },
+      { type: "fill", q: "Silage is produced through ______ process." },
+      { type: "fill", q: "The most common feeding system is ______ system." },
+      { type: "fill", q: "Zero grazing involves ______ confinement." },
+      { type: "fill", q: "Protein is needed for ______ and tissue repair." },
+      { type: "fill", q: "Water is the most ______ nutrient." },
+      { type: "fill", q: "The hormone responsible for libido is ______." },
+      { type: "fill", q: "Fertilization occurs in the ______ tube." },
+      { type: "fill", q: "The heat period is called ______." },
+      { type: "fill", q: "Artificial insemination requires technical ______." },
+      { type: "fill", q: "Flushing is done ______ weeks before mating." },
+      { type: "fill", q: "Steaming up occurs in the last ______ weeks of pregnancy." },
+      { type: "fill", q: "Colostrum should be given within ______ hours after birth." },
+      { type: "fill", q: "Weaning involves transition from milk to ______ feed." },
+      { type: "fill", q: "The hormone responsible for milk let-down is ______." },
+      { type: "fill", q: "Hand milking is the most ______ method in Nigeria." },
+      { type: "fill", q: "Nono is a ______ milk product." },
+      { type: "fill", q: "Pasteurization kills harmful ______." },
+      { type: "fill", q: "Branding creates ______ tissue on the skin." },
+      { type: "fill", q: "Castration leads to loss of ______ function." }
+    ];
 
-      let userAnswers = new Array(questions.length).fill(null);
+    let userAnswers = new Array(questions.length).fill(null);
 
-      function renderQuiz() {
-        let html =
-          '<h2 class="section-title">Section A: Multiple Choice Questions (30)</h2>';
-
-        questions.forEach((q, i) => {
-          if (q.type === "mcq") {
-            html += `<div class="question"><h3>Q${i + 1}: ${q.q}</h3><div class="options">`;
-            q.options.forEach((opt, j) => {
-              html += `<label><input type="radio" name="q${i}" onchange="userAnswers[${i}] = ${j}"> ${opt}</label>`;
-            });
-            html += `</div></div>`;
-          } else {
-            if (i === 30)
-              html +=
-                '<h2 class="section-title">Section B: Fill-in-the-Gap Questions (30)</h2>';
-            html += `<div class="question"><h3>Q${i + 1}: ${q.q}</h3>
-                   <input type="text" placeholder="Your answer here" onchange="userAnswers[${i}] = this.value.trim()">`;
-            html += `</div>`;
-          }
-        });
-        document.getElementById("quiz").innerHTML = html;
-      }
-
-      function startTimer() {
-        timerInterval = setInterval(() => {
-          timeLeft--;
-          let min = Math.floor(timeLeft / 60);
-          let sec = timeLeft % 60;
-          document.getElementById("time").textContent =
-            `${min}:${sec < 10 ? "0" : ""}${sec}`;
-
-          if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            submitTest(true);
-          }
-        }, 1000);
-      }
-
-      function calculateScore() {
-        let score = 0;
-        for (let i = 0; i < 30; i++) {
-          if (userAnswers[i] === questions[i].answer) score++;
+    function renderQuiz() {
+      let html = '<h2 class="section-title">Section A: Multiple Choice (30)</h2>';
+      
+      questions.forEach((q, i) => {
+        if (q.type === "mcq") {
+          html += `<div class="question"><strong>Q${i+1}:</strong> ${q.q}<div class="options">`;
+          q.options.forEach((opt, j) => {
+            html += `<label><input type="radio" name="q${i}" onchange="userAnswers[${i}] = ${j}"> ${opt}</label>`;
+          });
+          html += `</div></div>`;
+        } else {
+          if (i === 30) html += '<h2 class="section-title">Section B: Fill in the Gap (30)</h2>';
+          html += `<div class="question"><strong>Q${i+1}:</strong> ${q.q}
+                   <input type="text" placeholder="Type your answer" onchange="userAnswers[${i}] = this.value.trim()">`;
+          html += `</div>`;
         }
-        return score;
-      }
+      });
+      document.getElementById('quiz').innerHTML = html;
+    }
 
-      async function submitTest(isAuto = false) {
-        if (hasSubmitted) {
-          alert("You have already submitted this test.");
-          return;
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        let min = Math.floor(timeLeft / 60);
+        let sec = timeLeft % 60;
+        document.getElementById('time').textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+
+        if (timeLeft <= 300) {   // Last 5 minutes - turn redder
+          document.getElementById('floating-timer').style.background = '#b71c1c';
         }
 
-        clearInterval(timerInterval);
-        hasSubmitted = true;
-        document.getElementById("submitBtn").disabled = true;
-
-        const matric = document.getElementById("matric").value.trim();
-        if (!matric) {
-          alert("Please enter your Matriculation Number");
-          hasSubmitted = false;
-          return;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          submitTest(true);
         }
+      }, 1000);
+    }
 
-        const mcqScore = calculateScore();
-        const mcqPercentage = Math.round((mcqScore / 30) * 100);
+    function calculateScore() {
+      let score = 0;
+      for (let i = 0; i < 30; i++) {
+        if (userAnswers[i] === questions[i].answer) score++;
+      }
+      return score;
+    }
 
-        // Show result clearly
-        document.getElementById("result").innerHTML = `
-        <h2>${isAuto ? "⏰ Time Up!" : "✅ Test Submitted Successfully"}</h2>
+    async function submitTest(isAuto = false) {
+      if (hasSubmitted) {
+        alert("You have already submitted this test.");
+        return;
+      }
+
+      clearInterval(timerInterval);
+      hasSubmitted = true;
+      document.getElementById('submitBtn').disabled = true;
+
+      const matric = document.getElementById('matric').value.trim();
+      if (!matric) {
+        alert("Please enter your Matriculation Number");
+        hasSubmitted = false;
+        return;
+      }
+
+      const mcqScore = calculateScore();
+      const mcqPercentage = Math.round((mcqScore / 30) * 100);
+
+      document.getElementById('result').innerHTML = `
+        <h2>${isAuto ? '⏰ Time Up!' : '✅ Test Submitted'}</h2>
         <p><strong>Matric Number:</strong> ${matric}</p>
         <p><strong>MCQ Score:</strong> ${mcqScore} / 30 (${mcqPercentage}%)</p>
-        <p><strong>Total Questions:</strong> 60 (30 MCQ + 30 Fill-in-the-Gap)</p>
-        <p>Fill-in-the-gap answers have been recorded for manual marking.</p>
-        <p>Your complete result has been sent to yusufao@funaab.edu.ng</p>
+        <p><strong>Total Questions:</strong> 60</p>
+        <p>Fill-in-the-gap answers have been recorded.</p>
+        <p>Full result sent to yusufao@funaab.edu.ng</p>
       `;
-        document.getElementById("result").style.display = "block";
+      document.getElementById('result').style.display = 'block';
+      window.scrollTo(0, 0);
 
-        // Send email
-        const formData = new FormData();
-        formData.append("access_key", "eb3c53ad-1675-4ac1-9174-30181f7ff620");
-        formData.append("Matric_Number", matric);
-        formData.append("MCQ_Score", `${mcqScore} / 30 (${mcqPercentage}%)`);
-        formData.append("Total_Questions", "60");
-        formData.append(
-          "Time_Left",
-          `${Math.floor(timeLeft / 60)}:${timeLeft % 60}`,
-        );
-        formData.append(
-          "Submission_Type",
-          isAuto ? "Auto-submitted" : "Manual",
-        );
-        formData.append(
-          "subject",
-          `AGS 302 Test Result (60 Questions) - ${matric}`,
-        );
+      // Send to email
+      const formData = new FormData();
+      formData.append('access_key', 'eb3c53ad-1675-4ac1-9174-30181f7ff620');
+      formData.append('Matric_Number', matric);
+      formData.append('MCQ_Score', `${mcqScore} / 30 (${mcqPercentage}%)`);
+      formData.append('Total_Questions', '60');
+      formData.append('Time_Left', `${Math.floor(timeLeft/60)}:${timeLeft%60}`);
+      formData.append('subject', `AGS 302 Test Result - ${matric}`);
 
-        let details = "=== AGS 302 - 60 QUESTIONS TEST ===\n\n";
-        questions.forEach((q, i) => {
-          const ans =
-            userAnswers[i] !== null && userAnswers[i] !== ""
-              ? userAnswers[i]
-              : "Not Answered";
-          details += `Q${i + 1}: ${q.q}\nAnswer: ${ans}\n\n`;
-        });
-        formData.append("Full_Answers", details);
+      let details = "=== AGS 302 TEST (60 Questions) ===\n\n";
+      questions.forEach((q, i) => {
+        const ans = userAnswers[i] !== null && userAnswers[i] !== "" ? userAnswers[i] : "Not Answered";
+        details += `Q${i+1}: ${q.q}\nAnswer: ${ans}\n\n`;
+      });
+      formData.append('Full_Answers', details);
 
-        try {
-          await fetch("https://api.web3forms.com/submit", {
-            method: "POST",
-            body: formData,
-          });
-        } catch (e) {}
-      }
+      try {
+        await fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData });
+      } catch (e) {}
+    }
 
-      window.onload = () => {
-        renderQuiz();
-        startTimer();
-      };
-    </script>
-  </body>
+    window.onload = () => {
+      renderQuiz();
+      startTimer();
+    };
+  </script>
+</body>
 </html>
