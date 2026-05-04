@@ -1,41 +1,31 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
-<head> 
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AGS 302 CBT - 7 Minutes</title>
+  <title>AGS 302 CBT - Ruminant Production</title>
   <style>
     body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea, #764ba2); margin:0; padding:0; min-height:100vh; }
     .container { max-width: 720px; margin: 15px auto; background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); overflow: hidden; }
     header { background: #2c3e50; color: white; padding: 18px; text-align: center; }
-    
-    .timer { 
-      font-size: 2.2rem; 
-      font-weight: bold; 
-      text-align: center; 
-      padding: 16px; 
-      background: #ecf0f1; 
-      transition: all 0.4s; 
-    }
-    .timer.warning { 
-      background: #ffebee; 
-      color: #d32f2f; 
-      font-size: 2.4rem; 
-    }
-
-    .progress { height: 8px; background: #3498db; width: 0%; transition: width 0.4s; }
-    .question-container { padding: 20px; }
-    .question { margin-bottom: 28px; font-size: 1.08rem; line-height: 1.5; }
-    .options label { display: block; padding: 14px; margin: 10px 0; background: #f8f9fa; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; }
+    .timer { font-size: 1.8rem; font-weight: bold; color: #e74c3c; text-align: center; padding: 12px; background: #ecf0f1; border-bottom: 2px solid #ddd; }
+    .progress-bar-container { background: #eee; height: 10px; width: 100%; }
+    .progress { height: 100%; background: #3498db; width: 0%; transition: width 0.4s; }
+    .question-container { padding: 25px; min-height: 300px; }
+    .question { margin-bottom: 25px; font-size: 1.1rem; line-height: 1.5; color: #2c3e50; }
+    .options label { display: block; padding: 15px; margin: 10px 0; background: #f8f9fa; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; transition: 0.2s; }
     .options label:hover { background: #e8f0fe; border-color: #3498db; }
-    .nav-buttons { display: flex; justify-content: space-between; padding: 15px 20px; background: #f8f9fa; gap: 10px; }
-    button { padding: 13px 24px; border: none; border-radius: 8px; font-size: 1.05rem; cursor: pointer; flex: 1; }
+    .options input[type="radio"] { margin-right: 12px; transform: scale(1.2); }
+    .nav-buttons { display: flex; justify-content: space-between; padding: 20px; background: #f8f9fa; gap: 10px; border-top: 1px solid #ddd; }
+    button { padding: 12px 24px; border: none; border-radius: 8px; font-size: 1.05rem; cursor: pointer; flex: 1; transition: opacity 0.2s; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn-prev { background: #95a5a6; color: white; }
     .btn-next, .btn-review { background: #3498db; color: white; }
     .btn-submit { background: #27ae60; color: white; font-weight: bold; }
-    input[type="text"] { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 1.1rem; }
+    input[type="text"] { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 1.1rem; box-sizing: border-box; }
     .result, .review-screen { padding: 30px 20px; display: none; text-align: center; }
-    .score { font-size: 3.2rem; font-weight: bold; color: #27ae60; }
+    .score { font-size: 3.5rem; font-weight: bold; color: #27ae60; margin: 10px 0; }
+    #reviewContent { text-align: left; max-height: 400px; overflow-y: auto; margin-bottom: 20px; border: 1px solid #eee; padding: 10px; }
   </style>
 </head>
 <body>
@@ -47,126 +37,121 @@
   </header>
 
   <div class="timer" id="timer">Time Left: 07:00</div>
-  <div class="progress" id="progress"></div>
+  <div class="progress-bar-container">
+    <div class="progress" id="progress"></div>
+  </div>
 
   <form id="cbtForm" action="https://api.web3forms.com/submit" method="POST">
     <input type="hidden" name="access_key" value="064855e2-9965-4be4-b60a-1e61f4e9a0be">
     <input type="hidden" name="subject" value="AGS 302 CBT Result">
     <input type="hidden" name="to_email" value="yusufao@funaab.edu.ng">
 
-    <!-- Start Screen -->
     <div id="startScreen" class="question-container">
       <h2>Student Registration</h2>
-      <p><strong>Matric Number (11 digits only):</strong></p>
-      <input type="text" name="matric_number" id="matric" placeholder="e.g. 20201234567" maxlength="11" required pattern="\d{11}">
+      <p><strong>Matric Number (11 digits):</strong></p>
+      <input type="text" name="matric_number" id="matric" placeholder="e.g. 20201234567" maxlength="11" required>
       
       <p><strong>Full Name:</strong></p>
       <input type="text" name="name" id="name" placeholder="Enter your full name" required>
       
-      <button type="button" onclick="startTest()" style="background:#27ae60; color:white; padding:14px; font-size:1.1rem; width:100%; margin-top:15px;">
-        Start Test (7 Minutes)
+      <button type="button" onclick="startTest()" style="background:#27ae60; color:white; padding:16px; font-size:1.2rem; width:100%; margin-top:15px;">
+        Start Test Now
       </button>
     </div>
 
-    <!-- Quiz Area -->
     <div id="quizArea" style="display:none;">
       <div class="question-container" id="quiz"></div>
       <div class="nav-buttons">
-        <button type="button" class="btn-prev" id="prevBtn">Previous</button>
-        <button type="button" class="btn-next" id="nextBtn">Next</button>
-        <button type="button" class="btn-review" id="reviewBtn" style="display:none;">Review & Submit</button>
+        <button type="button" class="btn-prev" id="prevBtn" onclick="prevQuestion()">Previous</button>
+        <button type="button" class="btn-next" id="nextBtn" onclick="nextQuestion()">Next</button>
+        <button type="button" class="btn-review" id="reviewBtn" style="display:none;" onclick="showReviewScreen()">Review & Submit</button>
       </div>
     </div>
 
-    <!-- Review Screen -->
     <div id="reviewScreen" class="review-screen">
       <h2>Review Your Answers</h2>
       <div id="reviewContent"></div>
       <div class="nav-buttons">
-        <button type="button" onclick="backToQuiz()" class="btn-prev">Back</button>
-        <button type="button" onclick="finalSubmit()" class="btn-submit">Submit Final</button>
+        <button type="button" onclick="backToQuiz()" class="btn-prev">Back to Quiz</button>
+        <button type="button" onclick="finalSubmit()" class="btn-submit">Submit Final Paper</button>
       </div>
     </div>
   </form>
 
-  <!-- Result Screen -->
   <div id="resultScreen" class="result">
     <h2>Test Completed!</h2>
     <p class="score" id="scoreDisplay">0/60</p>
     <p id="percentage" style="font-size:1.5rem;"></p>
-    <p><strong>Matric Number:</strong> <span id="resultMatric"></span></p>
+    <hr>
+    <p><strong>Matric:</strong> <span id="resultMatric"></span></p>
     <p><strong>Name:</strong> <span id="resultName"></span></p>
     <p><strong>Time Taken:</strong> <span id="timeTaken"></span></p>
-    
-    <button onclick="location.reload()" style="background:#3498db; color:white; padding:14px 30px; margin-top:25px;">
-      Close
-    </button>
+    <button onclick="location.reload()" style="background:#3498db; color:white; padding:14px 30px; margin-top:25px;">Close</button>
   </div>
 </div>
 
 <script>
-// 60 Questions
 const originalQuestions = [
-  { q: "Q1. The primary function of the rumen is:", options: ["A. Enzymatic digestion", "B. Mechanical grinding", "C. Microbial fermentation", "D. Acid secretion"] },
-  { q: "Q2. Which compartment is the true stomach?", options: ["A. Rumen", "B. Reticulum", "C. Omasum", "D. Abomasum"] },
-  { q: "Q3. Cellulose digestion depends mainly on:", options: ["A. Saliva", "B. Host enzymes", "C. Rumen microbes", "D. Gastric juice"] },
-  { q: "Q4. Which is NOT a product of rumen fermentation?", options: ["A. VFA", "B. Microbial protein", "C. Glucose", "D. Methane"] },
-  { q: "Q5. Ruminants are superior because they:", options: ["A. Grow faster", "B. Use fibrous feeds", "C. Need less water", "D. Have simple stomach"] },
-  { q: "Q6. Most common cattle breed in Nigeria:", options: ["A. Muturu", "B. Red Bororo", "C. White Fulani", "D. Gudali"] },
-  { q: "Q7. Trypanotolerance is a feature of:", options: ["A. Gudali", "B. Muturu", "C. Bororo", "D. Bunaji"] },
-  { q: "Q8. Red Bororo is adapted to:", options: ["A. Dairy production", "B. Cold climate", "C. Long trekking", "D. Intensive system"] },
-  { q: "Q9. Tallest cattle breed:", options: ["A. Muturu", "B. Gudali", "C. White Fulani", "D. Red Bororo"] },
-  { q: "Q10. Black front, white rear sheep:", options: ["A. Yankasa", "B. Uda", "C. Balami", "D. WAD"] },
-  { q: "Q11. Largest sheep breed:", options: ["A. Yankasa", "B. Uda", "C. Balami", "D. WAD"] },
-  { q: "Q12. Most valuable goat breed:", options: ["A. Sahel", "B. WAD", "C. Red Sokoto", "D. Kano Brown"] },
-  { q: "Q13. Oestrous cycle in cattle:", options: ["A. 17 days", "B. 21 days", "C. 28 days", "D. 30 days"] },
-  { q: "Q14. Gestation in cattle:", options: ["A. 150 days", "B. 200 days", "C. 283 days", "D. 310 days"] },
-  { q: "Q15. Sheep cycle length:", options: ["A. 14 days", "B. 17 days", "C. 21 days", "D. 25 days"] },
-  { q: "Q16. Ovulation occurs during:", options: ["A. Proestrus", "B. Oestrus", "C. Metestrus", "D. Dioestrus"] },
-  { q: "Q17. Corpus luteum forms in:", options: ["A. Proestrus", "B. Oestrus", "C. Metestrus", "D. Dioestrus"] },
-  { q: "Q18. AI improves:", options: ["A. Feeding", "B. Genetics", "C. Water intake", "D. Growth"] },
-  { q: "Q19. Roughage fibre level:", options: ["A. 10%", "B. 15%", "C. 18%+", "D. 25%"] },
-  { q: "Q20. Protein concentrate:", options: ["A. Maize", "B. Cassava", "C. Groundnut cake", "D. Molasses"] },
-  { q: "Q21. Conserved forage:", options: ["A. Hay", "B. Wheat bran", "C. PKC", "D. Salt"] },
-  { q: "Q22. Limitation of roughages:", options: ["A. High protein", "B. Low fibre", "C. Low nutrient value", "D. High energy"] },
-  { q: "Q23. Most important nutrient:", options: ["A. Protein", "B. Energy", "C. Water", "D. Minerals"] },
-  { q: "Q24. Excess concentrates cause:", options: ["A. Faster growth", "B. Rumen disorder", "C. More fibre", "D. Better digestion"] },
-  { q: "Q25. Common system in Nigeria:", options: ["A. Intensive", "B. Semi-intensive", "C. Extensive", "D. Zero grazing"] },
-  { q: "Q26. Highest productivity system:", options: ["A. Extensive", "B. Semi-intensive", "C. Intensive", "D. Nomadic"] },
-  { q: "Q27. Cut-and-carry is used in:", options: ["A. Villages", "B. Urban areas", "C. Forest only", "D. Desert"] },
-  { q: "Q28. Flushing occurs:", options: ["A. After birth", "B. Before mating", "C. Late pregnancy", "D. After weaning"] },
-  { q: "Q29. Purpose of flushing:", options: ["A. Milk increase", "B. Fertility improvement", "C. Weight loss", "D. Disease control"] },
-  { q: "Q30. Steaming up occurs:", options: ["A. Early pregnancy", "B. Mid pregnancy", "C. Late pregnancy", "D. Lactation"] },
-  { q: "Q31. Steaming up improves:", options: ["A. Ovulation", "B. Conception", "C. Milk yield", "D. Fibre digestion"] },
-  { q: "Q32. Colostrum timing:", options: ["A. 24 hrs", "B. 12 hrs", "C. 2–6 hrs", "D. 48 hrs"] },
-  { q: "Q33. Lack of colostrum leads to:", options: ["A. Fast growth", "B. Immunity failure", "C. Early puberty", "D. Fat gain"] },
-  { q: "Q34. Rumen develops via:", options: ["A. Milk feeding", "B. Solid feed", "C. Water intake", "D. Exercise"] },
-  { q: "Q35. Weaning (small ruminants):", options: ["A. 2–4 weeks", "B. 6–12 weeks", "C. 4–6 months", "D. 6–9 months"] },
-  { q: "Q36. Goats are:", options: ["A. Grazers", "B. Browsers", "C. Omnivores", "D. Carnivores"] },
-  { q: "Q37. Goat gestation:", options: ["A. 120 days", "B. 145–150 days", "C. 200 days", "D. 283 days"] },
-  { q: "Q38. Goats produce:", options: ["A. Singles", "B. Twins/triplets", "C. Quadruplets", "D. None"] },
-  { q: "Q39. Milk let-down hormone:", options: ["A. Progesterone", "B. Oestrogen", "C. Oxytocin", "D. Testosterone"] },
-  { q: "Q40. Best milking method:", options: ["A. Strip", "B. Pull", "C. Full-hand", "D. Press"] },
-  { q: "Q41. Pasteurization does:", options: ["A. Add nutrients", "B. Kill microbes", "C. Increase fat", "D. Improve colour"] },
-  { q: "Q42. Permanent ID method:", options: ["A. Tag", "B. Tattoo", "C. Paint", "D. Rope"] },
-  { q: "Q43. Most painful method:", options: ["A. Tagging", "B. Tattooing", "C. Branding", "D. Notching"] },
-  { q: "Q44. Advantage of ear tag:", options: ["A. Permanent", "B. Cheap & easy", "C. Invisible", "D. Complex"] },
-  { q: "Q45. Highest disease exposure:", options: ["A. Intensive", "B. Extensive", "C. Semi-intensive", "D. Zero grazing"] },
-  { q: "Q46. Humpless cattle:", options: ["A. Bunaji", "B. Bororo", "C. Muturu", "D. Gudali"] },
-  { q: "Q47. Key nutrient for reproduction:", options: ["A. Fibre", "B. Energy", "C. Water", "D. Vitamins"] },
-  { q: "Q48. Fastest puberty:", options: ["A. Cattle", "B. Sheep", "C. Goat", "D. Equal"] },
-  { q: "Q49. Not a roughage:", options: ["A. Hay", "B. Grass", "C. Maize grain", "D. Silage"] },
-  { q: "Q50. Best breeding control system:", options: ["A. Extensive", "B. Intensive", "C. Nomadic", "D. Grazing"] },
-  { q: "Q51. Feeding before mating is:", options: ["A. Steaming", "B. Flushing", "C. Conditioning", "D. Supplementation"] },
-  { q: "Q52. Tsetse-resistant cattle:", options: ["A. Bororo", "B. Bunaji", "C. Muturu", "D. Gudali"] },
-  { q: "Q53. Rumen pH maintained by:", options: ["A. Concentrates", "B. Roughages", "C. Salt", "D. Water"] },
-  { q: "Q54. Major factor affecting nutrition:", options: ["A. Colour", "B. Age", "C. Horn shape", "D. Breed name"] },
-  { q: "Q55. Not a ruminant product:", options: ["A. Meat", "B. Milk", "C. Wool", "D. Eggs"] },
-  { q: "Q56. Limitation of AI:", options: ["A. Disease spread", "B. Cost/skill", "C. Poor genetics", "D. Low fertility"] },
-  { q: "Q57. Progesterone dominance:", options: ["A. Oestrus", "B. Proestrus", "C. Metestrus", "D. Dioestrus"] },
-  { q: "Q58. Most skill-demanding system:", options: ["A. Extensive", "B. Semi-intensive", "C. Intensive", "D. Nomadic"] },
-  { q: "Q59. Energy-rich feed:", options: ["A. Bone meal", "B. Maize", "C. Salt", "D. Hay"] },
-  { q: "Q60. Most critical survival practice:", options: ["A. Tagging", "B. Castration", "C. Colostrum feeding", "D. Branding"] }
+  { q: "Q1. The primary function of the rumen is:", options: ["A. Enzymatic digestion", "B. Mechanical grinding", "C. Microbial fermentation", "D. Acid secretion"], ans: "C" },
+  { q: "Q2. Which compartment is the true stomach?", options: ["A. Rumen", "B. Reticulum", "C. Omasum", "D. Abomasum"], ans: "D" },
+  { q: "Q3. Cellulose digestion depends mainly on:", options: ["A. Saliva", "B. Host enzymes", "C. Rumen microbes", "D. Gastric juice"], ans: "C" },
+  { q: "Q4. Which is NOT a product of rumen fermentation?", options: ["A. VFA", "B. Microbial protein", "C. Glucose", "D. Methane"], ans: "C" },
+  { q: "Q5. Ruminants are superior because they:", options: ["A. Grow faster", "B. Use fibrous feeds", "C. Need less water", "D. Have simple stomach"], ans: "B" },
+  { q: "Q6. Most common cattle breed in Nigeria:", options: ["A. Muturu", "B. Red Bororo", "C. White Fulani", "D. Gudali"], ans: "C" },
+  { q: "Q7. Trypanotolerance is a feature of:", options: ["A. Gudali", "B. Muturu", "C. Bororo", "D. Bunaji"], ans: "B" },
+  { q: "Q8. Red Bororo is adapted to:", options: ["A. Dairy production", "B. Cold climate", "C. Long trekking", "D. Intensive system"], ans: "C" },
+  { q: "Q9. Tallest cattle breed:", options: ["A. Muturu", "B. Gudali", "C. White Fulani", "D. Red Bororo"], ans: "D" },
+  { q: "Q10. Black front, white rear sheep:", options: ["A. Yankasa", "B. Uda", "C. Balami", "D. WAD"], ans: "B" },
+  { q: "Q11. Largest sheep breed:", options: ["A. Yankasa", "B. Uda", "C. Balami", "D. WAD"], ans: "C" },
+  { q: "Q12. Most valuable goat breed:", options: ["A. Sahel", "B. WAD", "C. Red Sokoto", "D. Kano Brown"], ans: "C" },
+  { q: "Q13. Oestrous cycle in cattle:", options: ["A. 17 days", "B. 21 days", "C. 28 days", "D. 30 days"], ans: "B" },
+  { q: "Q14. Gestation in cattle:", options: ["A. 150 days", "B. 200 days", "C. 283 days", "D. 310 days"], ans: "C" },
+  { q: "Q15. Sheep cycle length:", options: ["A. 14 days", "B. 17 days", "C. 21 days", "D. 25 days"], ans: "B" },
+  { q: "Q16. Ovulation occurs during:", options: ["A. Proestrus", "B. Oestrus", "C. Metestrus", "D. Dioestrus"], ans: "B" },
+  { q: "Q17. Corpus luteum forms in:", options: ["A. Proestrus", "B. Oestrus", "C. Metestrus", "D. Dioestrus"], ans: "C" },
+  { q: "Q18. AI improves:", options: ["A. Feeding", "B. Genetics", "C. Water intake", "D. Growth"], ans: "B" },
+  { q: "Q19. Roughage fibre level:", options: ["A. 10%", "B. 15%", "C. 18%+", "D. 25%"], ans: "C" },
+  { q: "Q20. Protein concentrate:", options: ["A. Maize", "B. Cassava", "C. Groundnut cake", "D. Molasses"], ans: "C" },
+  { q: "Q21. Conserved forage:", options: ["A. Hay", "B. Wheat bran", "C. PKC", "D. Salt"], ans: "A" },
+  { q: "Q22. Limitation of roughages:", options: ["A. High protein", "B. Low fibre", "C. Low nutrient value", "D. High energy"], ans: "C" },
+  { q: "Q23. Most important nutrient:", options: ["A. Protein", "B. Energy", "C. Water", "D. Minerals"], ans: "C" },
+  { q: "Q24. Excess concentrates cause:", options: ["A. Faster growth", "B. Rumen disorder", "C. More fibre", "D. Better digestion"], ans: "B" },
+  { q: "Q25. Common system in Nigeria:", options: ["A. Intensive", "B. Semi-intensive", "C. Extensive", "D. Zero grazing"], ans: "C" },
+  { q: "Q26. Highest productivity system:", options: ["A. Extensive", "B. Semi-intensive", "C. Intensive", "D. Nomadic"], ans: "C" },
+  { q: "Q27. Cut-and-carry is used in:", options: ["A. Villages", "B. Urban areas", "C. Forest only", "D. Desert"], ans: "B" },
+  { q: "Q28. Flushing occurs:", options: ["A. After birth", "B. Before mating", "C. Late pregnancy", "D. After weaning"], ans: "B" },
+  { q: "Q29. Purpose of flushing:", options: ["A. Milk increase", "B. Fertility improvement", "C. Weight loss", "D. Disease control"], ans: "B" },
+  { q: "Q30. Steaming up occurs:", options: ["A. Early pregnancy", "B. Mid pregnancy", "C. Late pregnancy", "D. Lactation"], ans: "C" },
+  { q: "Q31. Steaming up improves:", options: ["A. Ovulation", "B. Conception", "C. Milk yield", "D. Fibre digestion"], ans: "C" },
+  { q: "Q32. Colostrum timing:", options: ["A. 24 hrs", "B. 12 hrs", "C. 2–6 hrs", "D. 48 hrs"], ans: "C" },
+  { q: "Q33. Lack of colostrum leads to:", options: ["A. Fast growth", "B. Immunity failure", "C. Early puberty", "D. Fat gain"], ans: "B" },
+  { q: "Q34. Rumen develops via:", options: ["A. Milk feeding", "B. Solid feed", "C. Water intake", "D. Exercise"], ans: "B" },
+  { q: "Q35. Weaning (small ruminants):", options: ["A. 2–4 weeks", "B. 6–12 weeks", "C. 4–6 months", "D. 6–9 months"], ans: "B" },
+  { q: "Q36. Goats are:", options: ["A. Grazers", "B. Browsers", "C. Omnivores", "D. Carnivores"], ans: "B" },
+  { q: "Q37. Goat gestation:", options: ["A. 120 days", "B. 145–150 days", "C. 200 days", "D. 283 days"], ans: "B" },
+  { q: "Q38. Goats produce:", options: ["A. Singles", "B. Twins/triplets", "C. Quadruplets", "D. None"], ans: "B" },
+  { q: "Q39. Milk let-down hormone:", options: ["A. Progesterone", "B. Oestrogen", "C. Oxytocin", "D. Testosterone"], ans: "C" },
+  { q: "Q40. Best milking method:", options: ["A. Strip", "B. Pull", "C. Full-hand", "D. Press"], ans: "C" },
+  { q: "Q41. Pasteurization does:", options: ["A. Add nutrients", "B. Kill microbes", "C. Increase fat", "D. Improve colour"], ans: "B" },
+  { q: "Q42. Permanent ID method:", options: ["A. Tag", "B. Tattoo", "C. Paint", "D. Rope"], ans: "B" },
+  { q: "Q43. Most painful method:", options: ["A. Tagging", "B. Tattooing", "C. Branding", "D. Notching"], ans: "C" },
+  { q: "Q44. Advantage of ear tag:", options: ["A. Permanent", "B. Cheap & easy", "C. Invisible", "D. Complex"], ans: "B" },
+  { q: "Q45. Highest disease exposure:", options: ["A. Intensive", "B. Extensive", "C. Semi-intensive", "D. Zero grazing"], ans: "B" },
+  { q: "Q46. Humpless cattle:", options: ["A. Bunaji", "B. Bororo", "C. Muturu", "D. Gudali"], ans: "C" },
+  { q: "Q47. Key nutrient for reproduction:", options: ["A. Fibre", "B. Energy", "C. Water", "D. Vitamins"], ans: "B" },
+  { q: "Q48. Fastest puberty:", options: ["A. Cattle", "B. Sheep", "C. Goat", "D. Equal"], ans: "C" },
+  { q: "Q49. Not a roughage:", options: ["A. Hay", "B. Grass", "C. Maize grain", "D. Silage"], ans: "C" },
+  { q: "Q50. Best breeding control system:", options: ["A. Extensive", "B. Intensive", "C. Nomadic", "D. Grazing"], ans: "B" },
+  { q: "Q51. Feeding before mating is:", options: ["A. Steaming", "B. Flushing", "C. Conditioning", "D. Supplementation"], ans: "B" },
+  { q: "Q52. Tsetse-resistant cattle:", options: ["A. Bororo", "B. Bunaji", "C. Muturu", "D. Gudali"], ans: "C" },
+  { q: "Q53. Rumen pH maintained by:", options: ["A. Concentrates", "B. Roughages", "C. Salt", "D. Water"], ans: "B" },
+  { q: "Q54. Major factor affecting nutrition:", options: ["A. Colour", "B. Age", "C. Horn shape", "D. Breed name"], ans: "B" },
+  { q: "Q55. Not a ruminant product:", options: ["A. Meat", "B. Milk", "C. Wool", "D. Eggs"], ans: "D" },
+  { q: "Q56. Limitation of AI:", options: ["A. Disease spread", "B. Cost/skill", "C. Poor genetics", "D. Low fertility"], ans: "B" },
+  { q: "Q57. Progesterone dominance:", options: ["A. Oestrus", "B. Proestrus", "C. Metestrus", "D. Dioestrus"], ans: "D" },
+  { q: "Q58. Most skill-demanding system:", options: ["A. Extensive", "B. Semi-intensive", "C. Intensive", "D. Nomadic"], ans: "C" },
+  { q: "Q59. Energy-rich feed:", options: ["A. Bone meal", "B. Maize", "C. Salt", "D. Hay"], ans: "B" },
+  { q: "Q60. Most critical survival practice:", options: ["A. Tagging", "B. Castration", "C. Colostrum feeding", "D. Branding"], ans: "C" }
 ];
 
 let questions = [];
@@ -183,88 +168,76 @@ function shuffleArray(array) {
   }
 }
 
-function hasTakenTest(matric) {
-  return localStorage.getItem("ags302_60q_" + matric) === "true";
-}
-
-function markAsTaken(matric) {
-  localStorage.setItem("ags302_60q_" + matric, "true");
-}
-
 function startTest() {
   const matric = document.getElementById('matric').value.trim();
   const name = document.getElementById('name').value.trim();
-
-  if (!matric || matric.length !== 11 || !/^\d{11}$/.test(matric)) {
-    alert("Matric Number must be exactly 11 digits!");
+  
+  if (matric.length !== 11 || !/^\d+$/.test(matric)) {
+    alert("Please enter a valid 11-digit Matric Number");
     return;
   }
   if (!name) {
-    alert("Please enter your full name");
-    return;
-  }
-  if (hasTakenTest(matric)) {
-    alert("This Matric Number has already taken the test.");
+    alert("Please enter your name");
     return;
   }
 
   matricNumber = matric;
   questions = [...originalQuestions];
   shuffleArray(questions);
-
+  
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('quizArea').style.display = 'block';
-
+  
   startTime = Date.now();
-  currentQuestion = 0;
-  answers = new Array(60).fill(null);
+  startTimer(7 * 60);
   renderQuestion();
+}
 
-  let timeLeft = 420; // 7 minutes
+function startTimer(duration) {
+  let timer = duration;
   timerInterval = setInterval(() => {
-    timeLeft--;
-    const min = Math.floor(timeLeft / 60);
-    const sec = timeLeft % 60;
-    const timerEl = document.getElementById('timer');
+    let minutes = Math.floor(timer / 60);
+    let seconds = timer % 60;
+    document.getElementById('timer').textContent = `Time Left: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     
-    timerEl.textContent = `Time Left: \( {min}: \){sec < 10 ? '0' : ''}${sec}`;
-
-    if (timeLeft < 60) timerEl.classList.add('warning');
-    if (timeLeft <= 0) finalSubmit();
+    if (--timer < 0) {
+      clearInterval(timerInterval);
+      finalSubmit();
+    }
   }, 1000);
 }
 
 function renderQuestion() {
   const q = questions[currentQuestion];
-  let html = `<div class="question"><p><strong>${q.q}</strong></p><div class="options">`;
+  let html = `<div class="question"><p><strong>Question ${currentQuestion + 1} of 60</strong></p><p>${q.q}</p><div class="options">`;
   
   q.options.forEach(opt => {
-    html += `<label><input type="radio" name="q\( {currentQuestion}" value=" \){opt[0]}"> ${opt}</label>`;
+    const val = opt.charAt(0);
+    const checked = answers[currentQuestion] === val ? 'checked' : '';
+    html += `<label><input type="radio" name="q${currentQuestion}" value="${val}" ${checked} onchange="saveAnswer('${val}')"> ${opt}</label>`;
   });
-  html += `</div></div>`;
   
+  html += `</div></div>`;
   document.getElementById('quiz').innerHTML = html;
+  
   document.getElementById('progress').style.width = `${((currentQuestion + 1) / 60) * 100}%`;
-
   document.getElementById('prevBtn').style.display = currentQuestion === 0 ? 'none' : 'block';
   document.getElementById('nextBtn').style.display = currentQuestion === 59 ? 'none' : 'block';
   document.getElementById('reviewBtn').style.display = currentQuestion === 59 ? 'block' : 'none';
 }
 
-function saveAnswer() {
-  const selected = document.querySelector(`input[name="q${currentQuestion}"]:checked`);
-  if (selected) answers[currentQuestion] = selected.value;
+function saveAnswer(val) {
+  answers[currentQuestion] = val;
 }
 
-document.getElementById('nextBtn').onclick = () => { saveAnswer(); currentQuestion++; renderQuestion(); };
-document.getElementById('prevBtn').onclick = () => { saveAnswer(); if (currentQuestion > 0) { currentQuestion--; renderQuestion(); } };
-document.getElementById('reviewBtn').onclick = () => { saveAnswer(); showReviewScreen(); };
+function nextQuestion() { currentQuestion++; renderQuestion(); }
+function prevQuestion() { currentQuestion--; renderQuestion(); }
 
 function showReviewScreen() {
   let html = "";
   questions.forEach((q, i) => {
-    const ans = answers[i] || "Not answered";
-    html += `<div style="margin:12px 0; padding:12px; background:#f8f9fa; border-radius:8px;"><strong>Q${i+1}:</strong> ${q.q}<br><strong>Your Answer:</strong> ${ans}</div>`;
+    const status = answers[i] ? "Answered" : "Not Answered";
+    html += `<p>Q${i+1}: <strong>${status}</strong> (${answers[i] || '-'})</p>`;
   });
   document.getElementById('reviewContent').innerHTML = html;
   document.getElementById('quizArea').style.display = 'none';
@@ -274,38 +247,42 @@ function showReviewScreen() {
 function backToQuiz() {
   document.getElementById('reviewScreen').style.display = 'none';
   document.getElementById('quizArea').style.display = 'block';
-  renderQuestion();
 }
 
 function finalSubmit() {
   clearInterval(timerInterval);
-  saveAnswer();
+  let score = 0;
+  questions.forEach((q, i) => {
+    if (answers[i] === q.ans) score++;
+  });
 
   const totalSeconds = Math.floor((Date.now() - startTime) / 1000);
   const minTaken = Math.floor(totalSeconds / 60);
   const secTaken = totalSeconds % 60;
 
-  markAsTaken(matricNumber);
-
-  document.getElementById('quizArea').style.display = 'none';
   document.getElementById('reviewScreen').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'none';
   document.getElementById('resultScreen').style.display = 'block';
-
-  document.getElementById('scoreDisplay').textContent = `0/60`;
-  document.getElementById('percentage').textContent = `Submitted Successfully`;
+  
+  document.getElementById('scoreDisplay').textContent = `${score}/60`;
+  document.getElementById('percentage').textContent = `${Math.round((score/60)*100)}%`;
   document.getElementById('resultMatric').textContent = matricNumber;
   document.getElementById('resultName').textContent = document.getElementById('name').value;
-  document.getElementById('timeTaken').textContent = `${minTaken} min ${secTaken} sec`;
+  document.getElementById('timeTaken').textContent = `${minTaken}m ${secTaken}s`;
 
+  // Hidden fields for Web3Forms
   const form = document.getElementById('cbtForm');
-  const scoreField = document.createElement('input'); scoreField.type='hidden'; scoreField.name='score'; scoreField.value=`0/60`;
-  form.appendChild(scoreField);
-
-  const timeField = document.createElement('input'); timeField.type='hidden'; timeField.name='time_taken'; timeField.value=`${minTaken} min ${secTaken} sec`;
-  form.appendChild(timeField);
-
-  setTimeout(() => form.submit(), 800);
+  const addField = (name, value) => {
+    const input = document.createElement('input');
+    input.type = 'hidden'; input.name = name; input.value = value;
+    form.appendChild(input);
+  };
+  addField('Final_Score', `${score}/60`);
+  addField('Duration', `${minTaken}m ${secTaken}s`);
+  
+  form.submit();
 }
 </script>
+
 </body>
 </html>
